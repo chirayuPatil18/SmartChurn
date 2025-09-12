@@ -5,7 +5,7 @@ import pandas as pd
 from dataclasses import dataclass
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.cluster import KMeans
 
@@ -77,10 +77,9 @@ class DataTransformation:
             train_df.drop(columns=[c for c in drop_cols if c in train_df.columns], inplace=True, errors="ignore")
             test_df.drop(columns=[c for c in drop_cols if c in test_df.columns], inplace=True, errors="ignore")
 
-            # Encode target
-            le = LabelEncoder()
-            train_df['Churn'] = le.fit_transform(train_df['Churn'])
-            test_df['Churn'] = le.transform(test_df['Churn'])
+            # Encode target (Yes -> 1, No -> 0)
+            train_df['Churn'] = train_df['Churn'].map({'Yes': 1, 'No': 0})
+            test_df['Churn'] = test_df['Churn'].map({'Yes': 1, 'No': 0})
 
             target_column_name = "Churn"
 
